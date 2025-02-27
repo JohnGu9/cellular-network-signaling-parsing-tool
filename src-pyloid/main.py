@@ -1,74 +1,48 @@
-from pyloid import Pyloid, PyloidAPI, Bridge, TrayEvent, is_production, get_production_path
+from pyloid import Pyloid, is_production, get_production_path
 import os
+from api import custom
 
-app = Pyloid(app_name="Pyloid-App", single_instance=True)
+app = Pyloid(app_name="cellular-network-signaling-parsing-tool", single_instance=False)
 
-if (is_production()):
-    app.set_icon(os.path.join(get_production_path(), "icons/icon.png"))
-    app.set_tray_icon(os.path.join(get_production_path(), "icons/icon.png"))
-else:
-    app.set_icon("src-pyloid/icons/icon.png")
-    app.set_tray_icon("src-pyloid/icons/icon.png")
-
-
-############################## Tray ################################
-def on_double_click():
-    print("Tray icon was double-clicked.")
+###################`########### Tray ################################
+# from pyloid import TrayEvent
+# if (is_production()):
+#     app.set_icon(os.path.join(get_production_path(), "icons/icon.png")) # type: ignore
+#     app.set_tray_icon(os.path.join(get_production_path(), "icons/icon.png")) # type: ignore
+# else:
+#     app.set_icon("src-pyloid/icons/icon.png")
+#     app.set_tray_icon("src-pyloid/icons/icon.png")
 
 
-app.set_tray_actions(
-    {
-        TrayEvent.DoubleClick: on_double_click,
-    }
-)
-app.set_tray_menu_items(
-    [
-        {"label": "Show Window", "callback": app.show_and_focus_main_window},
-        {"label": "Exit", "callback": app.quit},
-    ]
-)
-####################################################################
-
-############################## Bridge ##############################
+# def on_double_click():
+#     print("Tray icon was double-clicked.")
 
 
-class custom(PyloidAPI):
-    @Bridge(result=str)
-    def create_window(self):
-        window = app.create_window(
-            title="Pyloid Browser-2",
-            js_apis=[custom()],
-        )
-
-        window.set_size(800, 600)
-        window.set_position(0, 0)
-
-        if (is_production()):
-            window.set_dev_tools(False)
-            window.load_file(os.path.join(
-                get_production_path(), "build/index.html"))
-        else:
-            window.set_dev_tools(True)
-            window.load_url("http://localhost:5173")
-
-        window.show()
-        window.focus()
-
-        return window.id
+# app.set_tray_actions(
+#     {
+#         TrayEvent.DoubleClick: on_double_click,
+#     }
+# )
+# app.set_tray_menu_items(
+#     [
+#         {"label": "Show Window", "callback": app.show_and_focus_main_window},
+#         {"label": "Exit", "callback": app.quit},
+#     ]
+# )
 ####################################################################
 
 
-if (is_production()):
+if is_production():
     # production
     window = app.create_window(
-        title="Pyloid Browser-production",
-        js_apis=[custom()],
+        title="Cellular Network Signaling Parsing Tool",
+        js_apis=[custom(app)],
     )
-    window.load_file(os.path.join(get_production_path(), "build/index.html"))
+    window.load_file(os.path.join(get_production_path(), "build/index.html"))  # type: ignore
 else:
     window = app.create_window(
-        title="Pyloid Browser-dev",
-        js_apis=[custom()],
+        title="Dev (Cellular Network Signaling Parsing Tool)",
+        js_apis=[custom(app)],
         dev_tools=True,
     )
     window.load_url("http://localhost:5173")

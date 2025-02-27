@@ -23,7 +23,7 @@ exe = EXE(
     a.scripts,
     [],
     exclude_binaries=True,
-    name='pyloid-app',
+    name='cellular-network-signaling-parsing-tool',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -42,11 +42,11 @@ coll = COLLECT(
     strip=False,
     upx=True,
     upx_exclude=[],
-    name='pyloid-app',
+    name='cellular-network-signaling-parsing-tool',
 )
 app = BUNDLE(
     coll,
-    name='pyloid-app.app',
+    name='cellular-network-signaling-parsing-tool.app',
     icon='src-pyloid/icons/icon.icns',
     bundle_identifier=None,
 )
